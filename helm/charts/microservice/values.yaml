@@ -1,0 +1,12 @@
+appName: serviceName
+appReplicas: 1
+imageName: image
+imageTag: tag
+containerPort: 8080
+volumeName: volume
+containerMountPath: /
+serviceType: ClusterIP
+containerEnvVars:
+  - name: env_name
+    value: "env_value"
+servicePort: 8080

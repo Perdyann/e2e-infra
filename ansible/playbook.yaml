@@ -1,0 +1,67 @@
+---
+- name: Wait for ssh connection
+  hosts: tag_deploying_microservices
+  gather_facts: False
+  tasks: 
+    - name: Ensure ssh port open
+      ansible.builtin.wait_for:
+        port: 22
+        delay: 10
+        timeout: 100
+        search_regex: OpenSSH
+        host: '{{ (ansible_ssh_host|default(ansible_host))|default(inventory_hostname) }}'
+      vars:
+        ansible_connection: local
+        ansible_python_interpreter: /usr/bin/python
+
+
+- name: Install python3, docker, docker-compose
+  hosts: tag_deploying_microservices
+  become: yes
+  gather_facts: False
+  tasks:
+    - name: Install python3 and docker
+      vars:
+        ansible_python_interpreter: /usr/bin/python
+      ansible.builtin.yum: 
+        name: 
+          - python3
+          - docker
+        update_cache: yes
+        state: present
+    - name: Install Docker-compose
+      ansible.builtin.get_url: 
+        url: https://github.com/docker/compose/releases/download/1.27.4/docker-compose-Linux-{{lookup('pipe', 'uname -m')}}
+        dest: /usr/local/bin/docker-compose
+        mode: +x
+    - name: Start docker daemon
+      ansible.builtin.systemd:
+        name: docker
+        state: started
+    - name: Install docker python module
+      ansible.builtin.pip:
+        name: 
+          - pip
+          - docker
+          - docker-compose
+        extra_args: --upgrade
+        executable: pip3
+    
+
+- name: Add ec2-user to docker group
+  hosts: tag_deploying_microservices
+  become: yes
+  tasks: 
+    - name: Add ec2-user to docker group
+      ansible.builtin.user: 
+        name: ec2-user
+        groups: docker
+        append: yes
+    - name: Reconnect to server session
+      ansible.builtin.meta: reset_connection
+
+
+# - authenticate aws
+# - install kubernetes & kubectl
+# - update aws kubeconfig
+# - install helm chart

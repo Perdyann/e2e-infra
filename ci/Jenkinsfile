@@ -1,0 +1,33 @@
+#!/usr/bin/env groovy
+
+pipeline {
+    agent any
+    stages {
+        stage('provision infrastructure') {
+            steps {
+               script {
+                    // withCredentials([sshUserPrivateKey(credentialsId: "5ab977e3-5128-4912-95d3-650908bee6d2", keyFileVariable: 'keyfile')]) {
+                    //     sh "cd ansible ; ansible-playbook --private-key ${keyfile} --user ec2-user playbook.yaml"
+                    // }
+                    echo "call terraform to provision eks infrastructure"
+               }
+            }
+        }
+        stage('deploy') {
+            steps {
+                script {
+                   echo 'automate infra configuring using ansible - connect to kubecluster and deploy'
+
+                //    def shellCmd = "bash ./server-cmds.sh ${IMAGE_NAME}"
+                //    def ec2Instance = "ec2-user@35.180.251.121"
+
+                //    sshagent(['ec2-connect']) {
+                //        sh "scp server-cmds.sh ${ec2Instance}:/home/ec2-user"
+                //        sh "scp docker-compose.yaml ${ec2Instance}:/home/ec2-user"
+                //        sh "ssh -o StrictHostKeyChecking=no ${ec2Instance} ${shellCmd}"
+                //    }
+                }
+            }
+        }
+    }
+}
