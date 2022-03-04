@@ -23,6 +23,7 @@ pipeline {
                 script {
                     echo 'spin up kube cluster using terraform'
                     sh '''
+                        #!/bin/bash
                         cd terraform
                         terraform init
                         terraform apply -auto-approve
