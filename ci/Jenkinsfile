@@ -3,20 +3,28 @@
 pipeline {
     agent any
     stages {
-        stage('provision infrastructure') {
+        stage('automate server configuration') {
             steps {
                script {
                     // withCredentials([sshUserPrivateKey(credentialsId: "5ab977e3-5128-4912-95d3-650908bee6d2", keyFileVariable: 'keyfile')]) {
                     //     sh "cd ansible ; ansible-playbook --private-key ${keyfile} --user ec2-user playbook.yaml"
                     // }
-                    echo "call terraform to provision eks infrastructure"
+                    echo 'use ansible to provision web application server'
+                    sh "pwd "
                }
+            }
+        }
+        stage('Spin up kubernetes cluster with worker groups') {
+            steps {
+                script {
+                    echo 'spin up kube cluster using terraform' 
+                }
             }
         }
         stage('deploy') {
             steps {
                 script {
-                   echo 'automate infra configuring using ansible - connect to kubecluster and deploy'
+                   echo 'automate infra configuring using ansible - connect to kubecluster and install helm charts'
 
                 //    def shellCmd = "bash ./server-cmds.sh ${IMAGE_NAME}"
                 //    def ec2Instance = "ec2-user@35.180.251.121"
