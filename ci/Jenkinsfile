@@ -22,9 +22,10 @@ pipeline {
             steps {
                 script {
                     echo 'spin up kube cluster using terraform'
-                    sh '''
-                        set +x
+                    sh '''#!/bin/bash
                         cd terraform
+                        pwd
+                        ls -l
                         terraform init
                         terraform apply -auto-approve
                         export K8S_AUTH_KUBECONFIG=../terraform/kubeconfig_terraform-eks-cluster
