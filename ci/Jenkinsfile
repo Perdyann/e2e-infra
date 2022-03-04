@@ -20,23 +20,23 @@ pipeline {
         }
         stage('Spin up kubernetes cluster with worker groups') {
             steps {
-                // script {
-                //     echo 'spin up kube cluster using terraform'
-                //     sh '''#!/bin/bash
-                //         cd terraform
-                //         pwd
-                //         ls -l
-                //         terraform init
-                //         terraform apply -auto-approve
-                //         export K8S_AUTH_KUBECONFIG=../terraform/kubeconfig_terraform-eks-cluster
-                //     '''
-                // }
                 script {
-                    dir('terraform') {
-                        sh "terraform init"
-                        sh "terraform apply --auto-approve"
-                    }
+                    echo 'spin up kube cluster using terraform'
+                    sh '''#!/bin/bash
+                        cd terraform
+                        pwd
+                        ls -l
+                        terraform init
+                        terraform apply -auto-approve
+                        export K8S_AUTH_KUBECONFIG=../terraform/kubeconfig_terraform-eks-cluster
+                    '''
                 }
+                // script {
+                //     dir('terraform') {
+                //         sh "terraform init"
+                //         sh "terraform apply --auto-approve"
+                //     }
+                // }
 
             }
         }
