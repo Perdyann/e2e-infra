@@ -7,21 +7,27 @@ pipeline {
             steps {
                script {
                     echo 'use ansible to provision web application server'
-                    withCredentials([sshUserPrivateKey(credentialsId: "5ab977e3-5128-4912-95d3-650908bee6d2", keyFileVariable: 'keyfile')]) {
-                        sh '''
-                            cd ansible
-                            pwd
-                            ls -l
-                            ansible-playbook --private-key ${keyfile}, --user ec2-user playbook.yaml
-                        '''
-                    }
+                    // withCredentials([sshUserPrivateKey(credentialsId: "5ab977e3-5128-4912-95d3-650908bee6d2", keyFileVariable: 'keyfile')]) {
+                    //     sh '''
+                    //         cd ansible
+                    //         pwd
+                    //         ls -l
+                    //         ansible-playbook --private-key ${keyfile}, --user ec2-user playbook.yaml
+                    //     '''
+                    // }
                }
             }
         }
         stage('Spin up kubernetes cluster with worker groups') {
             steps {
                 script {
-                    echo 'spin up kube cluster using terraform' 
+                    echo 'spin up kube cluster using terraform'
+                    sh '''
+                        cd terraform
+                        terraform init
+                        terraform apply -auto-approve
+                        export K8S_AUTH_KUBECONFIG=../terraform/kubeconfig_terraform-eks-cluster
+                    '''
                 }
             }
         }
