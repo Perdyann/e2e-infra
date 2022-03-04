@@ -11,6 +11,7 @@ pipeline {
                     // }
                     echo 'use ansible to provision web application server'
                     sh "pwd "
+                    sh "ls -l"
                }
             }
         }
