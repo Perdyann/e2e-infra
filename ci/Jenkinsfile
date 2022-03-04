@@ -6,12 +6,10 @@ pipeline {
         stage('automate server configuration') {
             steps {
                script {
-                    // withCredentials([sshUserPrivateKey(credentialsId: "5ab977e3-5128-4912-95d3-650908bee6d2", keyFileVariable: 'keyfile')]) {
-                    //     sh "cd ansible ; ansible-playbook --private-key ${keyfile} --user ec2-user playbook.yaml"
-                    // }
                     echo 'use ansible to provision web application server'
-                    sh "pwd "
-                    sh "ls -l"
+                    withCredentials([sshUserPrivateKey(credentialsId: "5ab977e3-5128-4912-95d3-650908bee6d2", keyFileVariable: 'keyfile')]) {
+                        sh "cd ansible ; ansible-playbook --private-key ${keyfile} --user ec2-user playbook.yaml"
+                    }
                }
             }
         }
